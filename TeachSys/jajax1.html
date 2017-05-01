@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--<script src="Scripts/jquery-2.2.1.js"></script>-->
+    <script src="Scripts/jquery-1.8.2.min.js"></script>
+    <script>
+        function receive(data) {
+            console.log("------------");
+            console.log(data);
+        }
+        $(function () {
+            $("#btn1").click(function () {
+                //$("#s1").load("/content/handler1.ashx");
+               
+                //1、IE浏览器，使url后带一个变化的参数，保证浏览器不会缓存每一次的数据
+                //2、data送给服务器的参数中如果有中文或其它特殊字符，如果使用字符串参数，则需要对数据进行编码；如果使用json对象则不需要
+                //$.get("/content/handler1.ashx","type=" + encodeURI("图书"), function (data) {
+                $.get("/content/handler1.ashx", {type:"图书"}, function (data) {
+                    //data:是对象或数组，图书列表肯定是数据
+                    var $table = $("<table><tr><td>序号</td><td>书名</td></tr></table>");
+                    $(data).each(function (index, book) {
+                        $table.append("<tr><td>" + book.no + "</td><td>" + book.name + "</td></tr>");
+                    });
+                    $("#s1").append($table);
+                }, "json");
+            });
+        });
+    </script>
+</head>
+<body>
+    <button id="btn1">请求服务器</button><span id="s1"></span>
+</body>
+</html>
