@@ -5,6 +5,51 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TeachDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityType Name="BookProperties">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Author" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PubYear" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="ISBN" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="BookPropertyID" Type="int" Nullable="false" />
+          <Property Name="BookTypeID" Type="int" Nullable="false" />
+          <Property Name="LastTime" Type="char" MaxLength="10" />
+          <Property Name="DisabledTime" Type="char" MaxLength="10" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BookTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="BookUsed">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseID" Type="int" Nullable="false" />
+          <Property Name="TeacherID" Type="int" Nullable="false" />
+          <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="StuBookNums" Type="int" Nullable="false" />
+          <Property Name="TeaBookNums" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Classes">
           <Key>
             <PropertyRef Name="ID" />
@@ -12,6 +57,18 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MajorID" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nums" Type="int" Nullable="false" />
+          <Property Name="MajorID" Type="int" Nullable="false" />
+          <Property Name="TermID" Type="int" Nullable="false" />
+          <Property Name="Memo" Type="nvarchar" MaxLength="50" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Departments">
@@ -47,6 +104,7 @@
           <Property Name="PTelNo2" Type="varchar" MaxLength="20" />
           <Property Name="IsLogin" Type="int" Nullable="false" />
           <Property Name="Stauts" Type="int" Nullable="false" />
+          <Property Name="Memo" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TeacherClasses">
           <Key>
@@ -69,6 +127,14 @@
           <Property Name="IsLogin" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Terms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
         <!--生成过程中发现错误:
 警告 6002: 表/视图“TeachDB.dbo.View_TeacherClasses”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
         <EntityType Name="View_TeacherClasses">
@@ -81,6 +147,8 @@
           <Property Name="TeacherName" Type="nvarchar" MaxLength="10" />
           <Property Name="TeacherNo" Type="varchar" MaxLength="20" />
           <Property Name="MajorID" Type="int" />
+          <Property Name="TeacherID" Type="int" />
+          <Property Name="TeacherClassID" Type="int" />
         </EntityType>
         <Association Name="FK_Classes_Majors">
           <End Role="Majors" Type="Self.Majors" Multiplicity="0..1" />
@@ -166,20 +234,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AddClasses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="majorID" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="TeacherID" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="TeachDBModelStoreContainer">
+          <EntitySet Name="BookProperties" EntityType="Self.BookProperties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookTypes" EntityType="Self.BookTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookUsed" EntityType="Self.BookUsed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Courses" EntityType="Self.Courses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Majors" EntityType="Self.Majors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TeacherClasses" EntityType="Self.TeacherClasses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teachers" EntityType="Self.Teachers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Terms" EntityType="Self.Terms" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="View_TeacherClasses" EntityType="Self.View_TeacherClasses" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
 [View_TeacherClasses].[ID] AS [ID], 
 [View_TeacherClasses].[Name] AS [Name], 
 [View_TeacherClasses].[TeacherName] AS [TeacherName], 
 [View_TeacherClasses].[TeacherNo] AS [TeacherNo], 
-[View_TeacherClasses].[MajorID] AS [MajorID]
+[View_TeacherClasses].[MajorID] AS [MajorID], 
+[View_TeacherClasses].[TeacherID] AS [TeacherID], 
+[View_TeacherClasses].[TeacherClassID] AS [TeacherClassID]
 FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_Classes_Majors" Association="Self.FK_Classes_Majors">
@@ -223,9 +304,7 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <Property Name="MajorID" Type="Int32" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Majors" Relationship="Self.FK_Classes_Majors" FromRole="Classes" ToRole="Majors" />
           <NavigationProperty Name="Students" Relationship="Self.FK_Students_Classes" FromRole="Classes" ToRole="Students" />
-          <NavigationProperty Name="TeacherClasses" Relationship="Self.FK_TeacherClasses_Classes" FromRole="Classes" ToRole="TeacherClasses" />
         </EntityType>
         <EntityType Name="Departments">
           <Key>
@@ -236,8 +315,6 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <Property Name="Status" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Majors" Relationship="Self.FK_Majors_Departments" FromRole="Departments" ToRole="Majors" />
           <NavigationProperty Name="Teachers" Relationship="Self.FK_Teachers_Departments" FromRole="Departments" ToRole="Teachers" />
-          <NavigationProperty Name="Departments1" Relationship="TeachDBModel.FK_Departments_Departments" FromRole="Departments" ToRole="Departments1" />
-          <NavigationProperty Name="Departments2" Relationship="TeachDBModel.FK_Departments_Departments" FromRole="Departments1" ToRole="Departments" />
         </EntityType>
         <EntityType Name="Majors">
           <Key>
@@ -248,7 +325,6 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Classes" Relationship="Self.FK_Classes_Majors" FromRole="Majors" ToRole="Classes" />
-          <NavigationProperty Name="Departments" Relationship="Self.FK_Majors_Departments" FromRole="Majors" ToRole="Departments" />
         </EntityType>
         <EntityType Name="Students">
           <Key>
@@ -266,7 +342,7 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <Property Name="PTelNo2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsLogin" Type="Int32" Nullable="false" />
           <Property Name="Stauts" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Classes" Relationship="Self.FK_Students_Classes" FromRole="Students" ToRole="Classes" />
+          <Property Name="Memo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TeacherClasses">
           <Key>
@@ -396,12 +472,36 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
             <End Role="Teachers" EntitySet="Teachers" />
             <End Role="TeacherClasses" EntitySet="TeacherClasses" />
           </AssociationSet>
+          <EntitySet Name="View_TeacherClasses" EntityType="TeachDBModel.View_TeacherClasses" />
+          <FunctionImport Name="AddClasses">
+            <Parameter Name="majorID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="TeacherID" Mode="In" Type="Int32" />
+          </FunctionImport>
           <AssociationSet Name="FK_Departments_Departments" Association="TeachDBModel.FK_Departments_Departments">
             <End Role="Departments" EntitySet="Departments" />
             <End Role="Departments1" EntitySet="Departments" />
           </AssociationSet>
-          <EntitySet Name="View_TeacherClasses" EntityType="TeachDBModel.View_TeacherClasses" />
+          <EntitySet Name="BookProperties" EntityType="TeachDBModel.BookProperties" />
+          <EntitySet Name="Books" EntityType="TeachDBModel.Books" />
+          <EntitySet Name="BookTypes" EntityType="TeachDBModel.BookTypes" />
+          <EntitySet Name="BookUsed" EntityType="TeachDBModel.BookUsed" />
+          <EntitySet Name="Courses" EntityType="TeachDBModel.Courses" />
+          <EntitySet Name="Terms" EntityType="TeachDBModel.Terms" />
         </EntityContainer>
+        <EntityType Name="View_TeacherClasses">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TeacherName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TeacherNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MajorID" Type="Int32" />
+          <Property Name="TeacherID" Type="Int32" />
+          <Property Name="TeacherClassID" Type="Int32" />
+        </EntityType>
         <Association Name="FK_Departments_Departments">
           <End Type="TeachDBModel.Departments" Role="Departments" Multiplicity="1" />
           <End Type="TeachDBModel.Departments" Role="Departments1" Multiplicity="0..1" />
@@ -414,16 +514,70 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="View_TeacherClasses">
+        <EntityType Name="BookProperties">
           <Key>
             <PropertyRef Name="ID" />
-            <PropertyRef Name="Name" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TeacherName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="TeacherNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MajorID" Type="Int32" />
+          <Property Name="Author" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Publisher" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PubYear" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="ISBN" Type="String" Nullable="false" MaxLength="13" FixedLength="true" Unicode="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="BookPropertyID" Type="Int32" Nullable="false" />
+          <Property Name="BookTypeID" Type="Int32" Nullable="false" />
+          <Property Name="LastTime" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="DisabledTime" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BookTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BookUsed">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="TeacherID" Type="Int32" Nullable="false" />
+          <Property Name="BookID" Type="Int32" Nullable="false" />
+          <Property Name="StuBookNums" Type="Int32" Nullable="false" />
+          <Property Name="TeaBookNums" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nums" Type="Int32" Nullable="false" />
+          <Property Name="MajorID" Type="Int32" Nullable="false" />
+          <Property Name="TermID" Type="Int32" Nullable="false" />
+          <Property Name="Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Terms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -463,6 +617,7 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="TeachDBModel.Students">
               <MappingFragment StoreEntitySet="Students">
+                <ScalarProperty Name="Memo" ColumnName="Memo" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ClassID" ColumnName="ClassID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -504,9 +659,83 @@ FROM [dbo].[View_TeacherClasses] AS [View_TeacherClasses]</DefiningQuery>
           <EntitySetMapping Name="View_TeacherClasses">
             <EntityTypeMapping TypeName="TeachDBModel.View_TeacherClasses">
               <MappingFragment StoreEntitySet="View_TeacherClasses">
+                <ScalarProperty Name="TeacherClassID" ColumnName="TeacherClassID" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
                 <ScalarProperty Name="MajorID" ColumnName="MajorID" />
                 <ScalarProperty Name="TeacherNo" ColumnName="TeacherNo" />
                 <ScalarProperty Name="TeacherName" ColumnName="TeacherName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddClasses" FunctionName="TeachDBModel.Store.AddClasses" />
+          <EntitySetMapping Name="BookProperties">
+            <EntityTypeMapping TypeName="TeachDBModel.BookProperties">
+              <MappingFragment StoreEntitySet="BookProperties">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="TeachDBModel.Books">
+              <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DisabledTime" ColumnName="DisabledTime" />
+                <ScalarProperty Name="LastTime" ColumnName="LastTime" />
+                <ScalarProperty Name="BookTypeID" ColumnName="BookTypeID" />
+                <ScalarProperty Name="BookPropertyID" ColumnName="BookPropertyID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="PubYear" ColumnName="PubYear" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookTypes">
+            <EntityTypeMapping TypeName="TeachDBModel.BookTypes">
+              <MappingFragment StoreEntitySet="BookTypes">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookUsed">
+            <EntityTypeMapping TypeName="TeachDBModel.BookUsed">
+              <MappingFragment StoreEntitySet="BookUsed">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TeaBookNums" ColumnName="TeaBookNums" />
+                <ScalarProperty Name="StuBookNums" ColumnName="StuBookNums" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="TeachDBModel.Courses">
+              <MappingFragment StoreEntitySet="Courses">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Memo" ColumnName="Memo" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="MajorID" ColumnName="MajorID" />
+                <ScalarProperty Name="Nums" ColumnName="Nums" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Terms">
+            <EntityTypeMapping TypeName="TeachDBModel.Terms">
+              <MappingFragment StoreEntitySet="Terms">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>

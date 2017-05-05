@@ -19,5 +19,7 @@ namespace TeachSys.Models
         public string TeacherName { get; set; }
         public string TeacherNo { get; set; }
         public Nullable<int> MajorID { get; set; }
+        public Nullable<int> TeacherID { get; set; }
+        public Nullable<int> TeacherClassID { get; set; }
     }
 }

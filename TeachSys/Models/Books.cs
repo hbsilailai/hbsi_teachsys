@@ -12,18 +12,19 @@ namespace TeachSys.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Classes
+    public partial class Books
     {
-        public Classes()
-        {
-            this.Students = new HashSet<Students>();
-        }
-    
         public int ID { get; set; }
-        public Nullable<int> MajorID { get; set; }
         public string Name { get; set; }
+        public string Author { get; set; }
+        public string Publisher { get; set; }
+        public string PubYear { get; set; }
+        public string ISBN { get; set; }
+        public double Price { get; set; }
+        public int BookPropertyID { get; set; }
+        public int BookTypeID { get; set; }
+        public string LastTime { get; set; }
+        public string DisabledTime { get; set; }
         public int Status { get; set; }
-    
-        public virtual ICollection<Students> Students { get; set; }
     }
 }

@@ -12,6 +12,9 @@ namespace TeachSys.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class TeachDBEntities : DbContext
     {
@@ -32,5 +35,28 @@ namespace TeachSys.Models
         public DbSet<TeacherClasses> TeacherClasses { get; set; }
         public DbSet<Teachers> Teachers { get; set; }
         public DbSet<View_TeacherClasses> View_TeacherClasses { get; set; }
+        public DbSet<BookProperties> BookProperties { get; set; }
+        public DbSet<Books> Books { get; set; }
+        public DbSet<BookTypes> BookTypes { get; set; }
+        public DbSet<BookUsed> BookUsed { get; set; }
+        public DbSet<Courses> Courses { get; set; }
+        public DbSet<Terms> Terms { get; set; }
+    
+        public virtual int AddClasses(Nullable<int> majorID, string name, Nullable<int> teacherID)
+        {
+            var majorIDParameter = majorID.HasValue ?
+                new ObjectParameter("majorID", majorID) :
+                new ObjectParameter("majorID", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var teacherIDParameter = teacherID.HasValue ?
+                new ObjectParameter("TeacherID", teacherID) :
+                new ObjectParameter("TeacherID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddClasses", majorIDParameter, nameParameter, teacherIDParameter);
+        }
     }
 }
