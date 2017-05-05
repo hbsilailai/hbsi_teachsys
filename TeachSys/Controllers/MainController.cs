@@ -29,7 +29,8 @@ namespace TeachSys.Controllers
                     if (teacher != null)
                     {
                         //FormsAuthentication.SetAuthCookie(teacher.Departments + ";;" + teacher.DeptID, false);
-                        FormsAuthenticationTicket t = new FormsAuthenticationTicket(1, teacher.Name, DateTime.Now, DateTime.Now.AddMinutes(30), false, teacher.DeptID + ";" + teacher.ID);
+                        
+                        FormsAuthenticationTicket t = new FormsAuthenticationTicket(1,teacher.Name, DateTime.Now, DateTime.Now.AddMinutes(30), false, teacher.DeptID + ";" + teacher.ID);
                         var ticket = FormsAuthentication.Encrypt(t);
                         HttpCookie c = new HttpCookie(FormsAuthentication.FormsCookieName,ticket);
                         HttpContext.Response.Cookies.Add(c);
@@ -54,7 +55,7 @@ namespace TeachSys.Controllers
         }
         public ActionResult Main()
         {
-            string t = HttpContext.Request.Cookies[FormsAuthentication.FormsCookieName].Value;
+            string t = HttpContext.Request.Cookies[FormsAuthentication.FormsCookieName].Value; //取到的是加密数据  -- ticket
             FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(t);
             ViewBag.teacherName = ticket.Name;
             return View();

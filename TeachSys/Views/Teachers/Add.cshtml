@@ -12,27 +12,19 @@
 <body>
     <div style="margin:10px">
         <form id="teachers_add" method="post">
-            所属部门：<input id="teachers_add_depart" name="DeptID" /> @*<select id="majors_add_depart" class="easyui-combobox"></select>*@<br />
-            姓&nbsp;&nbsp;&nbsp;&nbsp;名：@*<input type="text" id="majors_add_major"/>*@
-            <input class="easyui-textbox" id="teachers_add_teacherno" name="Name" data-options="prompt:'请输入姓名'"><br />
-            教 工 号：<input class="easyui-textbox" id="teachers_add_teacherno" name="TeacherNo" data-options="prompt:'请输入教工号'"><br />
-            允许登录：<input type="checkbox" id="teachers_add_islogin" value="1" name="IsLogin"><br />
-        </form>
+
+            <input id="teachers_add_depart" type="hidden" name="DeptID" value="@ViewBag.DepartmentID" />
+            <div class="input_line">
+                <label class="leftlabel">姓名：</label><input class="easyui-textbox" id="teachers_add_teacherno" name="Name" data-options="prompt:'请输入姓名'">
+            </div>
+            <div class="input_line">
+                <label class="leftlabel">教工号：</label><input class="easyui-textbox" id="teachers_add_teacherno" name="TeacherNo" data-options="prompt:'请输入教工号'">
+            </div>
+            <div class="input_line">
+                <label class="leftlabel">是否管理员：</label><input type="checkbox" id="teachers_add_islogin" value="1" name="IsLogin">
+            </div>
+</form>
     </div>
-    <script>
-        $(function () {
-            $("#teachers_add_depart").combobox({
-                url: "/departments/getdepartments",
-                valueField: 'ID',
-                textField: "Name"
-            });
-            //$.get("/departments/getdepartments", function (data) {
-            //    $(data).each(function (index, dept) {
-            //        //如果使用easyui的话，下面的代码会把数据添加到隐藏的select中
-            //        $("#majors_add_depart").append("<option value='" + dept.ID + "'>" + dept.Name + "</option>");
-            //    });
-            //}, "json");
-        });
-    </script>
+  
 </body>
 </html>

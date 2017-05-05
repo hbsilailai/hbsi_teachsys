@@ -197,11 +197,27 @@
     <Compile Include="Controllers\MajorsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\TermsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BookProperties.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Books.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BookTypes.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BookUsed.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Classes.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Courses.cs">
       <DependentUpon>TeachDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Departments.cs">
@@ -234,12 +250,16 @@
     <Compile Include="Models\Teachers.cs">
       <DependentUpon>TeachDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Terms.cs">
+      <DependentUpon>TeachDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\View_TeacherClasses.cs">
       <DependentUpon>TeachDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\globals.css" />
     <Content Include="Content\login\css\ie-css3.htc" />
     <Content Include="Content\login\css\login.css" />
     <Content Include="Content\login\css\main.css" />
@@ -1107,6 +1127,7 @@
     <Content Include="jajax1.html" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery_ext_hbsi.js" />
+    <Content Include="Scripts\myjs\students.js" />
     <Content Include="test.html" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -1128,6 +1149,12 @@
     <Content Include="Views\Teachers\Add.cshtml" />
     <Content Include="Views\Students\Index.cshtml" />
     <Content Include="Views\Classes\Index.cshtml" />
+    <Content Include="Views\Classes\Add.cshtml" />
+    <Content Include="Views\Teachers\Edit.cshtml" />
+    <Content Include="Views\Classes\Edit.cshtml" />
+    <Content Include="Views\Majors\Edit.cshtml" />
+    <Content Include="Views\Students\Add.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
